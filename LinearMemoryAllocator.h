@@ -29,9 +29,12 @@ namespace MemoryAllocators
 		void Reset() noexcept;
 
 		void* Allocate(const size_t alignment, const size_t size);
-
 		template<typename T, typename... TArgs>
 		T* Allocate(TArgs&&... arguments);
+
+		void* AllocateTight(const size_t size);
+		template<typename T, typename... TArgs>
+		T* AllocateTight(TArgs&&... arguments);
 
 		bool Has(const void* const pointer) const noexcept;
 
@@ -74,6 +77,29 @@ namespace MemoryAllocators
 	T* LinearMemoryAllocator<bufferSize>::Allocate(TArgs&&... arguments)
 	{
 		void* place = Allocate(alignof(T), sizeof(T));
+		return new (place) T(std::forward<TArgs>(arguments)...);
+	}
+
+	template<size_t bufferSize>
+	void* LinearMemoryAllocator<bufferSize>::AllocateTight(const size_t size)
+	{
+		if (m_remainingSize >= size)
+		{
+			void* place = m_nextPlace;
+			m_nextPlace += size;
+			m_remainingSize -= size;
+
+			return place;
+		}
+
+		throw std::bad_alloc();
+	}
+
+	template<size_t bufferSize>
+	template<typename T, typename... TArgs>
+	T* LinearMemoryAllocator<bufferSize>::AllocateTight(TArgs&&... arguments)
+	{
+		void* place = AllocateTight(sizeof(T));
 		return new (place) T(std::forward<TArgs>(arguments)...);
 	}
 
