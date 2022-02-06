@@ -19,18 +19,10 @@ namespace MemoryAllocators
 		uint8_t* m_nextPlace;
 
 	public:
-		DynamicLinearMemoryAllocator(const size_t bufferSize) :
-			bufferSize(bufferSize),
-			m_remainingSize(bufferSize),
-			m_buffer(new uint8_t[bufferSize]),
-			m_nextPlace(m_buffer)
-		{
-		}
+		DynamicLinearMemoryAllocator(const size_t bufferSize) noexcept;
+		DynamicLinearMemoryAllocator(DynamicLinearMemoryAllocator&& other) noexcept;
 
-		virtual ~DynamicLinearMemoryAllocator()
-		{
-			delete[] m_buffer;
-		}
+		~DynamicLinearMemoryAllocator() noexcept;
 
 		void Reset() noexcept;
 
@@ -45,6 +37,12 @@ namespace MemoryAllocators
 		bool Has(const void* const pointer) const noexcept;
 
 		inline size_t getRemainingSize() const noexcept { return m_remainingSize; }
+
+	private:
+		DynamicLinearMemoryAllocator(const DynamicLinearMemoryAllocator&) = delete;
+
+		DynamicLinearMemoryAllocator& operator=(const DynamicLinearMemoryAllocator&) = delete;
+		DynamicLinearMemoryAllocator& operator=(DynamicLinearMemoryAllocator&& other) = delete;
 	};
 
 	template<typename T, typename ...TArgs>

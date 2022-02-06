@@ -8,6 +8,28 @@
 namespace Zor {
 namespace MemoryAllocators
 {
+	DynamicLinearMemoryAllocator::DynamicLinearMemoryAllocator(const size_t bufferSize) noexcept :
+		bufferSize(bufferSize),
+		m_remainingSize(bufferSize),
+		m_buffer(new uint8_t[bufferSize]),
+		m_nextPlace(m_buffer)
+	{
+	}
+
+	DynamicLinearMemoryAllocator::DynamicLinearMemoryAllocator(DynamicLinearMemoryAllocator&& other) noexcept :
+		bufferSize(other.bufferSize),
+		m_remainingSize(other.m_remainingSize),
+		m_buffer(other.m_buffer),
+		m_nextPlace(other.m_nextPlace)
+	{
+		other.m_buffer = nullptr;
+	}
+
+	DynamicLinearMemoryAllocator::~DynamicLinearMemoryAllocator() noexcept
+	{
+		delete[] m_buffer;
+	}
+
 	void DynamicLinearMemoryAllocator::Reset() noexcept
 	{
 		std::fill(m_buffer, m_buffer + bufferSize, (uint8_t)0);
