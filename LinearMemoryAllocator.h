@@ -4,6 +4,8 @@
 
 #include <cstdint>
 #include <utility>
+#include <algorithm>
+#include <memory>
 
 namespace Zor {
 namespace MemoryAllocators
