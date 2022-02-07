@@ -1,6 +1,6 @@
 // Copyright (c) 2022 Vladimir Popov zor1994@gmail.com https://github.com/ZorPastaman/Linear-Memory-Allocator
 
-#include "DynamicLinearMemoryAllocator.h"
+#include "LinearMemoryAllocator.h"
 
 #include <algorithm>
 #include <memory>
@@ -8,36 +8,44 @@
 namespace Zor {
 namespace MemoryAllocators
 {
-	DynamicLinearMemoryAllocator::DynamicLinearMemoryAllocator(const size_t bufferSize) noexcept :
+	LinearMemoryAllocator::LinearMemoryAllocator(const size_t bufferSize) noexcept :
 		bufferSize(bufferSize),
-		m_remainingSize(bufferSize),
 		m_buffer(new uint8_t[bufferSize]),
+		m_remainingSize(bufferSize),
 		m_nextPlace(m_buffer)
 	{
 	}
 
-	DynamicLinearMemoryAllocator::DynamicLinearMemoryAllocator(DynamicLinearMemoryAllocator&& other) noexcept :
+	LinearMemoryAllocator::LinearMemoryAllocator(LinearMemoryAllocator&& other) noexcept :
 		bufferSize(other.bufferSize),
-		m_remainingSize(other.m_remainingSize),
 		m_buffer(other.m_buffer),
+		m_remainingSize(other.m_remainingSize),
 		m_nextPlace(other.m_nextPlace)
 	{
 		other.m_buffer = nullptr;
 	}
 
-	DynamicLinearMemoryAllocator::~DynamicLinearMemoryAllocator() noexcept
+	LinearMemoryAllocator::LinearMemoryAllocator(const size_t bufferSize, uint8_t* const buffer) noexcept :
+		bufferSize(bufferSize),
+		m_buffer(buffer),
+		m_remainingSize(bufferSize),
+		m_nextPlace(m_buffer)
+	{
+	}
+
+	LinearMemoryAllocator::~LinearMemoryAllocator() noexcept
 	{
 		delete[] m_buffer;
 	}
 
-	void DynamicLinearMemoryAllocator::Reset() noexcept
+	void LinearMemoryAllocator::Reset() noexcept
 	{
 		std::fill(m_buffer, m_buffer + bufferSize, (uint8_t)0);
 		m_remainingSize = bufferSize;
 		m_nextPlace = m_buffer;
 	}
 
-	void* DynamicLinearMemoryAllocator::Allocate(const size_t alignment, const size_t size)
+	void* LinearMemoryAllocator::Allocate(const size_t alignment, const size_t size)
 	{
 		void* place = m_nextPlace;
 
@@ -52,7 +60,7 @@ namespace MemoryAllocators
 		throw std::bad_alloc();
 	}
 
-	void* DynamicLinearMemoryAllocator::AllocateTight(const size_t size)
+	void* LinearMemoryAllocator::AllocateTight(const size_t size)
 	{
 		if (m_remainingSize >= size)
 		{
@@ -66,7 +74,7 @@ namespace MemoryAllocators
 		throw std::bad_alloc();
 	}
 
-	bool DynamicLinearMemoryAllocator::Has(const void* const pointer) const noexcept
+	bool LinearMemoryAllocator::Has(const void* const pointer) const noexcept
 	{
 		return pointer >= m_buffer && pointer < m_buffer + bufferSize;
 	}
