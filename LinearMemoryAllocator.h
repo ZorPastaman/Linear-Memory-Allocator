@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include <cstdint>
 #include <utility>
 
 namespace Zor {
@@ -17,10 +16,10 @@ namespace MemoryAllocators
 		const size_t bufferSize;
 
 	private: 
-		uint8_t* m_buffer;
+		char* m_buffer;
 
 		size_t m_remainingSize;
-		uint8_t* m_nextPlace;
+		char* m_nextPlace;
 
 	public:
 		/// <param name="bufferSize"></param>
@@ -38,7 +37,7 @@ namespace MemoryAllocators
 		/// <para>The <paramref name="buffer"/> must be of size of the <paramref name="bufferSize"/>.</para>
 		/// <para>If the <paramref name="buffer"/> mustn't be destroyed on destruction, call <see cref="KillBufferPointer"/> in a derived destructor.</para>
 		/// </remarks>
-		LinearMemoryAllocator(const size_t bufferSize, uint8_t* const buffer) noexcept;
+		LinearMemoryAllocator(const size_t bufferSize, char* const buffer) noexcept;
 
 	private:
 		LinearMemoryAllocator(const LinearMemoryAllocator&) = delete;

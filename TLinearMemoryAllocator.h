@@ -17,7 +17,7 @@ namespace MemoryAllocators
 		static constexpr size_t bufferSizeValue = bufferSizeValue;
 
 	private:
-		uint8_t m_buffer[bufferSizeValue] = {};
+		char m_buffer[bufferSizeValue] = {};
 
 	public:
 		TLinearMemoryAllocator() noexcept :

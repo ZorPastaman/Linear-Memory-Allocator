@@ -10,10 +10,15 @@ namespace MemoryAllocators
 {
 	LinearMemoryAllocator::LinearMemoryAllocator(const size_t bufferSize) :
 		bufferSize(bufferSize),
-		m_buffer(new uint8_t[bufferSize]),
-		m_remainingSize(bufferSize),
-		m_nextPlace(m_buffer)
+		m_remainingSize(bufferSize)
 	{
+		m_buffer = static_cast<char*>(malloc(bufferSize));
+		if (!m_buffer)
+		{
+			throw std::bad_alloc();
+		}
+
+		m_nextPlace = m_buffer;
 	}
 
 	LinearMemoryAllocator::LinearMemoryAllocator(LinearMemoryAllocator&& other) noexcept :
@@ -25,7 +30,7 @@ namespace MemoryAllocators
 		other.m_buffer = nullptr;
 	}
 
-	LinearMemoryAllocator::LinearMemoryAllocator(const size_t bufferSize, uint8_t* const buffer) noexcept :
+	LinearMemoryAllocator::LinearMemoryAllocator(const size_t bufferSize, char* const buffer) noexcept :
 		bufferSize(bufferSize),
 		m_buffer(buffer),
 		m_remainingSize(bufferSize),
@@ -35,12 +40,12 @@ namespace MemoryAllocators
 
 	LinearMemoryAllocator::~LinearMemoryAllocator() noexcept
 	{
-		delete[] m_buffer;
+		free(m_buffer);
 	}
 
 	void LinearMemoryAllocator::Reset() noexcept
 	{
-		std::fill(m_buffer, m_buffer + bufferSize, (uint8_t)0);
+		std::fill(m_buffer, m_buffer + bufferSize, (char)0);
 		m_remainingSize = bufferSize;
 		m_nextPlace = m_buffer;
 	}
@@ -51,7 +56,7 @@ namespace MemoryAllocators
 
 		if (std::align(alignment, size, place, m_remainingSize))
 		{
-			m_nextPlace = (uint8_t*)place + size;
+			m_nextPlace = static_cast<char*>(place) + size;
 			m_remainingSize -= size;
 
 			return place;
