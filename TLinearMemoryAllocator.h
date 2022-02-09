@@ -7,6 +7,9 @@
 namespace Zor {
 namespace MemoryAllocators
 {
+	/// <summary>
+	/// Preallocates a buffer of a specified size inside the allocator and linearly allocates objects into it.
+	/// </summary>
 	template<size_t bufferSizeValue = 1024>
 	class TLinearMemoryAllocator : public LinearMemoryAllocator
 	{

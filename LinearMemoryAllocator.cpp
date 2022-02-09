@@ -8,7 +8,7 @@
 namespace Zor {
 namespace MemoryAllocators
 {
-	LinearMemoryAllocator::LinearMemoryAllocator(const size_t bufferSize) noexcept :
+	LinearMemoryAllocator::LinearMemoryAllocator(const size_t bufferSize) :
 		bufferSize(bufferSize),
 		m_buffer(new uint8_t[bufferSize]),
 		m_remainingSize(bufferSize),
