@@ -9,8 +9,7 @@ namespace Zor {
 namespace MemoryAllocators
 {
 	LinearMemoryAllocator::LinearMemoryAllocator(const size_t bufferSize) :
-		bufferSize(bufferSize),
-		m_remainingSize(bufferSize)
+		bufferSize(bufferSize)
 	{
 		m_buffer = static_cast<char*>(malloc(bufferSize));
 		if (!m_buffer)
@@ -24,7 +23,6 @@ namespace MemoryAllocators
 	LinearMemoryAllocator::LinearMemoryAllocator(LinearMemoryAllocator&& other) noexcept :
 		bufferSize(other.bufferSize),
 		m_buffer(other.m_buffer),
-		m_remainingSize(other.m_remainingSize),
 		m_nextPlace(other.m_nextPlace)
 	{
 		other.m_buffer = nullptr;
@@ -33,7 +31,6 @@ namespace MemoryAllocators
 	LinearMemoryAllocator::LinearMemoryAllocator(const size_t bufferSize, char* const buffer) noexcept :
 		bufferSize(bufferSize),
 		m_buffer(buffer),
-		m_remainingSize(bufferSize),
 		m_nextPlace(m_buffer)
 	{
 	}
@@ -46,19 +43,17 @@ namespace MemoryAllocators
 	void LinearMemoryAllocator::Reset() noexcept
 	{
 		std::fill(m_buffer, m_buffer + bufferSize, (char)0);
-		m_remainingSize = bufferSize;
 		m_nextPlace = m_buffer;
 	}
 
 	void* LinearMemoryAllocator::Allocate(const size_t alignment, const size_t size)
 	{
 		void* place = m_nextPlace;
+		size_t remainingSize = getRemainingSize();
 
-		if (std::align(alignment, size, place, m_remainingSize))
+		if (std::align(alignment, size, place, remainingSize))
 		{
 			m_nextPlace = static_cast<char*>(place) + size;
-			m_remainingSize -= size;
-
 			return place;
 		}
 
@@ -67,11 +62,10 @@ namespace MemoryAllocators
 
 	void* LinearMemoryAllocator::AllocateTight(const size_t size)
 	{
-		if (m_remainingSize >= size)
+		if (getRemainingSize() >= size)
 		{
 			void* place = m_nextPlace;
 			m_nextPlace += size;
-			m_remainingSize -= size;
 
 			return place;
 		}

@@ -17,8 +17,6 @@ namespace MemoryAllocators
 
 	private: 
 		char* m_buffer;
-
-		size_t m_remainingSize;
 		char* m_nextPlace;
 
 	public:
@@ -99,7 +97,7 @@ namespace MemoryAllocators
 		/// <returns><see langword="True"/> if the <paramref name="pointer"/> points to the memory in the buffer; <see langword="false"/> otherwise.</returns>
 		bool Has(const void* const pointer) const noexcept;
 
-		inline size_t getRemainingSize() const noexcept { return m_remainingSize; }
+		inline size_t getRemainingSize() const noexcept { return static_cast<size_t>(m_buffer + bufferSize - m_nextPlace); }
 
 	protected:
 		/// <summary>
