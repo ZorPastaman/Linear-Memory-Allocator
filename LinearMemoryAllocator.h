@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <cstdlib>
 #include <utility>
 
 namespace Zor {
@@ -45,9 +46,9 @@ namespace MemoryAllocators
 
 	public:
 		/// <summary>
-		/// Clears the buffer and starts object allocations from the begin.
+		/// Starts object allocations from the begin.
 		/// </summary>
-		void Reset() noexcept;
+		inline void Reset() noexcept { m_nextPlace = m_buffer; };
 
 		/// <summary>
 		/// Allocates a placement in the buffer for an object of the specified parameters with alignment.
@@ -110,15 +111,15 @@ namespace MemoryAllocators
 		LinearMemoryAllocator& operator=(LinearMemoryAllocator&& other) = delete;
 	};
 
-	template<typename T, typename ...TArgs>
-	T* MemoryAllocators::LinearMemoryAllocator::Allocate(TArgs && ...arguments)
+	template<typename T, typename... TArgs>
+	T* LinearMemoryAllocator::Allocate(TArgs&&... arguments)
 	{
 		void* place = Allocate(alignof(T), sizeof(T));
 		return new (place) T(std::forward<TArgs>(arguments)...);
 	}
 
-	template<typename T, typename ...TArgs>
-	T* MemoryAllocators::LinearMemoryAllocator::AllocateTight(TArgs && ...arguments)
+	template<typename T, typename... TArgs>
+	T* LinearMemoryAllocator::AllocateTight(TArgs&&... arguments)
 	{
 		void* place = AllocateTight(sizeof(T));
 		return new (place) T(std::forward<TArgs>(arguments)...);

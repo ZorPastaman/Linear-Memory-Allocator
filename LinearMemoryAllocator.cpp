@@ -2,7 +2,7 @@
 
 #include "LinearMemoryAllocator.h"
 
-#include <algorithm>
+#include <new>
 #include <memory>
 
 namespace Zor {
@@ -38,12 +38,6 @@ namespace MemoryAllocators
 	LinearMemoryAllocator::~LinearMemoryAllocator() noexcept
 	{
 		free(m_buffer);
-	}
-
-	void LinearMemoryAllocator::Reset() noexcept
-	{
-		std::fill(m_buffer, m_buffer + bufferSize, (char)0);
-		m_nextPlace = m_buffer;
 	}
 
 	void* LinearMemoryAllocator::Allocate(const size_t alignment, const size_t size)
