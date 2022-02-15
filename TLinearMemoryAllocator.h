@@ -7,14 +7,15 @@
 namespace Zor {
 namespace MemoryAllocators
 {
-	/// <summary>
-	/// Preallocates a buffer of a specified size inside the allocator and linearly allocates objects into it.
-	/// </summary>
-	template<size_t TBufferSize = 1024>
+	/**
+	 * Preallocates a buffer of a specified size inside the allocator and linearly allocates objects into it.
+	 * @tparam NBufferSize
+	 */
+	template<size_t NBufferSize = 1024>
 	class TLinearMemoryAllocator : public LinearMemoryAllocator
 	{
 	public:
-		static constexpr size_t bufferSizeValue = TBufferSize;
+		static constexpr size_t bufferSizeValue = NBufferSize;
 
 	private:
 		char m_buffer[bufferSizeValue] = {};
@@ -25,14 +26,13 @@ namespace MemoryAllocators
 		{
 		}
 
-	private:
 		TLinearMemoryAllocator(const TLinearMemoryAllocator&) = delete;
 		TLinearMemoryAllocator(TLinearMemoryAllocator&&) = delete;
 
 	public:
-		virtual ~TLinearMemoryAllocator() noexcept override;
+		~TLinearMemoryAllocator() noexcept override;
 
-	private:
+	public:
 		TLinearMemoryAllocator& operator=(const TLinearMemoryAllocator&) = delete;
 		TLinearMemoryAllocator& operator=(TLinearMemoryAllocator&&) = delete;
 	};

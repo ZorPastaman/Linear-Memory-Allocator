@@ -43,7 +43,7 @@ namespace MemoryAllocators
 	void* LinearMemoryAllocator::Allocate(const size_t alignment, const size_t size)
 	{
 		void* place = m_nextPlace;
-		size_t remainingSize = getRemainingSize();
+		size_t remainingSize = GetRemainingSize();
 
 		if (std::align(alignment, size, place, remainingSize))
 		{
@@ -56,7 +56,7 @@ namespace MemoryAllocators
 
 	void* LinearMemoryAllocator::AllocateTight(const size_t size)
 	{
-		if (getRemainingSize() >= size)
+		if (GetRemainingSize() >= size)
 		{
 			void* place = m_nextPlace;
 			m_nextPlace += size;

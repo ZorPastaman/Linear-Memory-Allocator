@@ -8,9 +8,9 @@
 namespace Zor {
 namespace MemoryAllocators
 {
-	/// <summary>
-	/// Preallocates a buffer of a specified size and linearly allocates objects into it.
-	/// </summary>
+	/**
+	 * Preallocates a buffer of a specified size and linearly allocates objects into it.
+	 */
 	class LinearMemoryAllocator
 	{
 	public:
@@ -21,107 +21,111 @@ namespace MemoryAllocators
 		char* m_nextPlace;
 
 	public:
-		/// <param name="bufferSize"></param>
-		/// <exception cref="std::bad_alloc">Thrown when it's impossible to allocate a desired buffer.</exception>
-		LinearMemoryAllocator(const size_t bufferSize = 1024);
+		/**
+		 * @param bufferSize
+		 * @throws std::bad_alloc Thrown when it's impossible to allocate a desired buffer.
+		 */
+		LinearMemoryAllocator(size_t bufferSize = 1024);
 		LinearMemoryAllocator(LinearMemoryAllocator&& other) noexcept;
 
-	protected:
-		/// <summary>
-		/// Creates an allocator with an external buffer supplied by a derived class.
-		/// </summary>
-		/// <param name="bufferSize"></param>
-		/// <param name="buffer"></param>
-		/// <remarks>
-		/// <para>The <paramref name="buffer"/> must be of size of the <paramref name="bufferSize"/>.</para>
-		/// <para>If the <paramref name="buffer"/> mustn't be destroyed on destruction, call <see cref="KillBufferPointer"/> in a derived destructor.</para>
-		/// </remarks>
-		LinearMemoryAllocator(const size_t bufferSize, char* const buffer) noexcept;
-
-	private:
 		LinearMemoryAllocator(const LinearMemoryAllocator&) = delete;
+
+	protected:
+		/**
+		 * Creates an allocator with an external buffer supplied by a derived class.
+		 * @param bufferSize
+		 * @param buffer
+		 * @remark The @a buffer must be of size of the @a bufferSize.
+		 * @remark If the @a buffer mustn't be destroyed on destruction,
+		 * call @a KillBufferPointer() in a derived destructor.
+		 */
+		LinearMemoryAllocator(size_t bufferSize, char* buffer) noexcept;
 
 	public:
 		virtual ~LinearMemoryAllocator() noexcept;
 
 	public:
-		/// <summary>
-		/// Starts object allocations from the begin.
-		/// </summary>
-		inline void Reset() noexcept { m_nextPlace = m_buffer; };
-
-		/// <summary>
-		/// Allocates a placement in the buffer for an object of the specified parameters with alignment.
-		/// </summary>
-		/// <param name="alignment">Alignment of the object.</param>
-		/// <param name="size">Size of the object.</param>
-		/// <returns>Placement for an object of the specified parameters.</returns>
-		/// <exception cref="std::bad_alloc">Thrown when it's impossible to allocate a desired placement in the buffer.</exception>
-		/// <seealso cref="AllocateTight"/>
-		void* Allocate(const size_t alignment, const size_t size);
-		/// <summary>
-		/// Allocates an object of type <typeparamref name="T"/> in the buffer with alignment.
-		/// </summary>
-		/// <typeparam name="T">Allocated object type.</typeparam>
-		/// <typeparam name="...TArgs">Constructor argument types.</typeparam>
-		/// <param name="...arguments">Constructor arguments.</param>
-		/// <returns>Allocated object.</returns>
-		/// <exception cref="std::bad_alloc">Thrown when it's impossible to allocate a desired placement in the buffer.</exception>
-		/// <seealso cref="AllocateTight"/>
+		/**
+		 * Allocates a placement in the buffer for an object of the specified parameters with alignment.
+		 * @param alignment Alignment of the object.
+		 * @param size Size of the object.
+		 * @returns Placement for an object of the specified parameters.
+		 * @throws std::bad_alloc Thrown when it's impossible to allocate a desired placement in the buffer.
+		 * @see AllocateTight(size_t)
+		 */
+		void* Allocate(size_t alignment, size_t size);
+		/**
+		 * Allocates an object of type @a T in the buffer with alignment.
+		 * @tparam T Allocated object type.
+		 * @tparam TArgs Constructor argument types.
+		 * @param arguments Constructor arguments.
+		 * @returns Allocated object.
+		 * @throws std::bad_alloc Thrown when it's impossible to allocate a desired placement in the buffer.
+		 * @see AllocateTight(TArgs&&...)
+		 */
 		template<typename T, typename... TArgs>
 		T* Allocate(TArgs&&... arguments);
 
-		/// <summary>
-		/// Allocates a placement in the buffer for an object of the specified parameters without alignment.
-		/// </summary>
-		/// <param name="size">Size of the object.</param>
-		/// <returns>Placement for an object of the specified parameters.</returns>
-		/// <exception cref="std::bad_alloc">Thrown when it's impossible to allocate a desired placement in the buffer.</exception>
-		/// <seealso cref="Allocate"/>
-		void* AllocateTight(const size_t size);
-		/// <summary>
-		/// Allocates an object of type <typeparamref name="T"/> in the buffer without alignment.
-		/// </summary>
-		/// <typeparam name="T">Allocated object type.</typeparam>
-		/// <typeparam name="...TArgs">Constructor argument types.</typeparam>
-		/// <param name="...arguments">Constructor arguments.</param>
-		/// <returns>Allocated object.</returns>
-		/// <exception cref="std::bad_alloc">Thrown when it's impossible to allocate a desired placement in the buffer.</exception>
-		/// <seealso cref="Allocate"/>
+		/**
+		 * Allocates a placement in the buffer for an object of the specified parameters without alignment.
+		 * @param size Size of the object.
+		 * @returns Placement for an object of the specified parameters.
+		 * @throws std::bad_alloc Thrown when it's impossible to allocate a desired placement in the buffer.
+		 * @see Allocate(size_t, size_t)
+		 */
+		void* AllocateTight(size_t size);
+		/**
+		 * Allocates an object of type @a T in the buffer without alignment.
+		 * @tparam T Allocated object type.
+		 * @tparam TArgs Constructor argument types.
+		 * @param arguments Constructor arguments.
+		 * @returns Allocated object.
+		 * @throws std::bad_alloc Thrown when it's impossible to allocate a desired placement in the buffer.
+		 * @see Allocate(TArgs&&...)
+		 */
 		template<typename T, typename... TArgs>
 		T* AllocateTight(TArgs&&... arguments);
 
-		/// <summary>
-		/// Checks if the <paramref name="pointer"/> points to the memory in the buffer.
-		/// </summary>
-		/// <param name="pointer">Checked pointer</param>
-		/// <returns><see langword="True"/> if the <paramref name="pointer"/> points to the memory in the buffer; <see langword="false"/> otherwise.</returns>
-		bool Has(const void* const pointer) const noexcept;
+		/**
+ 		* Starts object allocations from the begin.
+ 		*/
+		inline void Reset() noexcept { m_nextPlace = m_buffer; };
 
-		inline size_t getRemainingSize() const noexcept { return static_cast<size_t>(m_buffer + bufferSize - m_nextPlace); }
+		/**
+		 * Checks if the @a pointer points to the memory in the buffer.
+		 * @param pointer Checked pointer.
+		 * @returns @p True if the @a pointer points to the memory in the buffer; @p false otherwise.
+		 */
+		bool Has(const void* pointer) const noexcept;
+
+		inline size_t GetRemainingSize() const noexcept
+		{
+			return static_cast<size_t>(m_buffer + bufferSize - m_nextPlace);
+		}
 
 	protected:
-		/// <summary>
-		/// Kills the pointer to the buffer. It may be used in a derived destructor to prevent a destruction of the buffer in this class destructor.
-		/// </summary>
+		/**
+		 * Kills the pointer to the buffer.
+		 * It may be used in a derived destructor to prevent a destruction of the buffer in this class destructor.
+		 */
 		inline void KillBufferPointer() noexcept { m_buffer = nullptr; };
 
-	private:
+	public:
 		LinearMemoryAllocator& operator=(const LinearMemoryAllocator&) = delete;
-		LinearMemoryAllocator& operator=(LinearMemoryAllocator&& other) = delete;
+		LinearMemoryAllocator& operator=(LinearMemoryAllocator&&) = delete;
 	};
 
 	template<typename T, typename... TArgs>
 	T* LinearMemoryAllocator::Allocate(TArgs&&... arguments)
 	{
-		void* place = Allocate(alignof(T), sizeof(T));
+		void* const place = Allocate(alignof(T), sizeof(T));
 		return new (place) T(std::forward<TArgs>(arguments)...);
 	}
 
 	template<typename T, typename... TArgs>
 	T* LinearMemoryAllocator::AllocateTight(TArgs&&... arguments)
 	{
-		void* place = AllocateTight(sizeof(T));
+		void* const place = AllocateTight(sizeof(T));
 		return new (place) T(std::forward<TArgs>(arguments)...);
 	}
 }}
