@@ -18,11 +18,11 @@ namespace MemoryAllocators
 		static constexpr size_t bufferSizeValue = NBufferSize;
 
 	private:
-		char m_buffer[bufferSizeValue] = {};
+		char m_buffer[NBufferSize] = {};
 
 	public:
 		TLinearMemoryAllocator() noexcept :
-			LinearMemoryAllocator(bufferSizeValue, m_buffer)
+			LinearMemoryAllocator(NBufferSize, m_buffer)
 		{
 		}
 
@@ -37,8 +37,8 @@ namespace MemoryAllocators
 		TLinearMemoryAllocator& operator=(TLinearMemoryAllocator&&) = delete;
 	};
 
-	template<size_t bufferSizeValue>
-	TLinearMemoryAllocator<bufferSizeValue>::~TLinearMemoryAllocator() noexcept
+	template<size_t NBufferSize>
+	TLinearMemoryAllocator<NBufferSize>::~TLinearMemoryAllocator() noexcept
 	{
 		KillBufferPointer();
 	}

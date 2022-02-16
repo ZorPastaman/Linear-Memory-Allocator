@@ -58,7 +58,7 @@ namespace MemoryAllocators
 	{
 		if (GetRemainingSize() >= size)
 		{
-			void* place = m_nextPlace;
+			void* const place = m_nextPlace;
 			m_nextPlace += size;
 
 			return place;

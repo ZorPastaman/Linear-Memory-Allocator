@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.0.2] - 2022-02-16
+
+### Changed
+
+- Little code clean-up.
+
 ## [1.0.1] - 2022-02-15
 
 ### Changed
@@ -20,6 +26,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Linear Memory Allocator
 
-[Unreleased]: https://github.com/ZorPastaman/Linear-Memory-Allocator/compare/v1.0.1..HEAD
+[Unreleased]: https://github.com/ZorPastaman/Linear-Memory-Allocator/compare/v1.0.2..HEAD
+[1.0.2]: https://github.com/ZorPastaman/Linear-Memory-Allocator/releases/tag/v1.0.2
 [1.0.1]: https://github.com/ZorPastaman/Linear-Memory-Allocator/releases/tag/v1.0.1
 [1.0.0]: https://github.com/ZorPastaman/Linear-Memory-Allocator/releases/tag/v1.0.0
