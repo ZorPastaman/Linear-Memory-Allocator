@@ -17,7 +17,7 @@ This repo is just a code. Download it and include the headers.
 ### [LinearMemoryAllocator](LinearMemoryAllocator.h)
 
 This is a basic linear memory allocator. Its constructor takes an argument of a buffer size and dynamically allocates a buffer.
-It's your responsibility to set the size that can contain all the object allocated into it.
+It's your responsibility to set the size that can contain all the objects allocated into it.
 
 ### [TLinearMemoryAllocator](TLinearMemoryAllocator.h)
 
@@ -25,3 +25,7 @@ This a class derived from [LinearMemoryAllocator](LinearMemoryAllocator.h).
 It takes a buffer size argument in its template parameter and 
 statically allocates a buffer right after all the other fields in the allocator.
 It may make a memory usage even more efficient but the compiler must know its size in advance.
+
+## See Also
+
+- [Stack Memory Allocator](https://github.com/ZorPastaman/Stack-Memory-Allocator)

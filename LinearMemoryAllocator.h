@@ -87,7 +87,7 @@ namespace MemoryAllocators
 		T* AllocateTight(TArgs&&... arguments);
 
 		/**
- 		* Starts object allocations from the begin.
+ 		* Starts object allocations from the beginning.
  		*/
 		inline void Reset() noexcept { m_nextPlace = m_buffer; };
 
